@@ -1,0 +1,51 @@
+# Heart Disease Prediction
+
+End-to-end classification project on the UCI Cleveland heart disease dataset
+(Kaggle), covering data cleaning, EDA, scikit-learn pipelines, and model comparison.
+
+## Goal
+Predict whether a patient has heart disease from 13 clinical features.
+
+## Dataset
+- Heart Disease UCI (Cleveland), 303 rows, 296 after cleaning
+- Target: `target` (1 = heart disease, 0 = no heart disease)
+
+## Workflow
+1. **Cleaning:** removed duplicates and invalid codes (`ca` = 4, `thal` = 0).
+   Found that the target labels were reversed versus the documentation
+   (checked with `exang`, `ca`, `oldpeak`, `thalach`) and corrected them.
+2. **EDA:** target balance, numerical and categorical features vs target,
+   outliers (kept, medically plausible), skewness, correlations.
+3. **Preprocessing:** one-hot encoding, scaling, `log1p` on `chol` and `oldpeak`
+   (scale-sensitive models only), all inside `Pipeline` to avoid data leakage.
+4. **Modeling:** 60/20/20 stratified train/validation/test split, 5-fold CV on
+   the training set.
+5. **Evaluation:** accuracy, precision, recall, F1, ROC-AUC, confusion matrix, ROC curve.
+
+## Results
+| Model | CV F1 | Validation F1 | Validation ROC-AUC |
+|---|---|---|---|
+| Logistic Regression | 0.81 | 0.89 | 0.96 |
+| SVM | - | 0.82 | 0.94 |
+| Random Forest | - | 0.78 | 0.93 |
+| Gradient Boosting | - | 0.82 | 0.92 |
+| KNN | - | 0.81 | 0.89 |
+
+**Best model:** Logistic Regression. It scored highest, did not overfit, and
+is easy to interpret. Test set: F1 [..], ROC-AUC [..].
+
+**Key features:** `thalach`, `oldpeak`, `exang`, `ca`, `cp`, `thal`.
+
+## Limitations
+- Small dataset (validation and test sets are about 60 rows each), so small
+  differences between models are not reliable.
+- No hyperparameter tuning yet.
+- Shows association, not causation. Not for clinical use.
+
+## Tools
+Python, JupyterLab, pandas, NumPy, Matplotlib, Seaborn, scikit-learn
+
+## How to run
+```bash
+pip install pandas numpy matplotlib seaborn scikit-learn jupyter
+jupyter notebook heart_disease_portfolio-eng.ipynb
